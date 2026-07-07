@@ -3,8 +3,8 @@
     ║  BABIS DEADLY GOLF – COMPACT PRECISION AIMBOT + HOMING   ║
     ║  Detects ball (RigidSync+UserId) & hole (EndPoint)       ║
     ║  Advanced loft scanning (0‑85°) for minimal power        ║
-    ║  Obstacle warning, laser beam, compact auto‑scaling GUI  ║
-    ║  Hold‑to‑fire with progress bar + instant homing curve   ║
+    ║  Laser beam, compact auto‑scaling GUI, hold‑to‑fire      ║
+    ║  (Obstacle / Power / Angle / Distance lines removed)     ║
     ╚══════════════════════════════════════════════════════════════╝
 ]]
 
@@ -53,8 +53,8 @@ screenGui.Parent = player:WaitForChild("PlayerGui")
 -- Main panel (compact, fixed pixel size, positioned proportionally)
 local panel = Instance.new("Frame")
 panel.Name = "MainPanel"
-panel.Size = UDim2.new(0, 175, 0, 255)       -- narrow and short
-panel.Position = UDim2.new(1, -185, 0.5, -127) -- right edge, vertically centered
+panel.Size = UDim2.new(0, 175, 0, 175)       -- reduced height after removing info lines
+panel.Position = UDim2.new(1, -185, 0.5, -87) -- vertically centered
 panel.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
 panel.BackgroundTransparency = 0.1
 panel.BorderSizePixel = 0
@@ -83,7 +83,7 @@ titleText.TextSize = 13
 titleText.Text = "BABIS DEADLY GOLF"
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 
--- Toggle button (small, combined enable/disable)
+-- Toggle button
 local toggleBtn = Instance.new("TextButton", panel)
 toggleBtn.Size = UDim2.new(1, -16, 0, 28)
 toggleBtn.Position = UDim2.new(0.5, 0, 0, 30)
@@ -96,31 +96,22 @@ toggleBtn.TextSize = 12
 toggleBtn.AutoButtonColor = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 6)
 
--- Info block (compact, single line for each info)
-local function makeInfoLabel(yOffset, text)
-    local lbl = Instance.new("TextLabel", panel)
-    lbl.Size = UDim2.new(1, -16, 0, 14)
-    lbl.Position = UDim2.new(0.5, 0, 0, yOffset)
-    lbl.AnchorPoint = Vector2.new(0.5, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-    lbl.Font = Enum.Font.Gotham
-    lbl.TextSize = 11
-    lbl.Text = text
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    return lbl
-end
+-- Only one info line: status
+local statusLabel = Instance.new("TextLabel", panel)
+statusLabel.Size = UDim2.new(1, -16, 0, 14)
+statusLabel.Position = UDim2.new(0.5, 0, 0, 64)
+statusLabel.AnchorPoint = Vector2.new(0.5, 0)
+statusLabel.BackgroundTransparency = 1
+statusLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextSize = 11
+statusLabel.Text = "Status: Idle"
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-local statusLabel = makeInfoLabel(64, "Status: Idle")
-local distanceLabel = makeInfoLabel(80, "Dist: --")
-local angleLabel = makeInfoLabel(96, "Angle: --°")
-local powerLabel = makeInfoLabel(112, "Power: --%")
-local obstacleLabel = makeInfoLabel(128, "Obstacle: --")
-
--- Power slider (0‑115%)
+-- Power slider (0‑115%) – shifted up
 local sliderLabel = Instance.new("TextLabel", panel)
 sliderLabel.Size = UDim2.new(1, -16, 0, 14)
-sliderLabel.Position = UDim2.new(0.5, 0, 0, 148)
+sliderLabel.Position = UDim2.new(0.5, 0, 0, 84)
 sliderLabel.AnchorPoint = Vector2.new(0.5, 0)
 sliderLabel.BackgroundTransparency = 1
 sliderLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
@@ -130,7 +121,7 @@ sliderLabel.Text = "Max Power: 100%"
 
 local sliderBg = Instance.new("Frame", panel)
 sliderBg.Size = UDim2.new(1, -16, 0, 10)
-sliderBg.Position = UDim2.new(0.5, 0, 0, 164)
+sliderBg.Position = UDim2.new(0.5, 0, 0, 100)
 sliderBg.AnchorPoint = Vector2.new(0.5, 0)
 sliderBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 sliderBg.BorderSizePixel = 0
@@ -193,7 +184,7 @@ strikeBtn.Font = Enum.Font.GothamBold
 strikeBtn.TextSize = 12
 Instance.new("UICorner", strikeBtn).CornerRadius = UDim.new(0, 6)
 
--- Progress bar inside the button (overlay)
+-- Progress bar inside the button
 local progressOverlay = Instance.new("Frame", strikeBtn)
 progressOverlay.Size = UDim2.new(1, 0, 1, 0)
 progressOverlay.BackgroundTransparency = 1
@@ -202,7 +193,7 @@ local progressFill = Instance.new("Frame", progressOverlay)
 progressFill.Size = UDim2.new(0, 0, 1, 0)
 progressFill.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
 progressFill.BorderSizePixel = 0
-progressFill.BackgroundTransparency = 0.3  -- semi‑transparent progress
+progressFill.BackgroundTransparency = 0.3
 
 -- Dragging the panel via title bar
 local drag = false
@@ -284,32 +275,6 @@ function computeBestShot()
     attach1.WorldPosition = holePos
     beam.Enabled = aimbotEnabled
 
-    -- Obstacle detection (simple raycast)
-    local obstacleText = "None"
-    if aimbotEnabled then
-        local rayOrigin = ballPart.Position
-        local rayDir = (holePos - rayOrigin).Unit
-        local rayParams = RaycastParams.new()
-        rayParams.FilterType = Enum.RaycastFilterType.Blacklist
-        rayParams.FilterDescendantsInstances = {ballPart}
-        local rayResult = Workspace:Raycast(rayOrigin, rayDir * 1000, rayParams)
-        if rayResult then
-            local hitPart = rayResult.Instance
-            -- exclude the hole object
-            local isHolePart = false
-            for _, obj in CollectionService:GetTagged("EndPoint") do
-                if obj == hitPart or (obj:IsA("Model") and obj:FindFirstChild(hitPart.Name)) then
-                    isHolePart = true
-                    break
-                end
-            end
-            if not isHolePart then
-                obstacleText = hitPart.Name
-            end
-        end
-    end
-    obstacleLabel.Text = "Obstacle: " .. obstacleText
-
     if not aimbotEnabled then return end
     if not endPoint or not endPoint.ComputeTarget then
         statusLabel.Text = "Status: Module missing"
@@ -354,10 +319,6 @@ function computeBestShot()
     end
 
     if swing then pcall(function() swing.SetAngle(currentAngle) end) end
-    local dist = toHole.Magnitude
-    distanceLabel.Text = "Dist: " .. string.format("%.1f", dist)
-    angleLabel.Text = "Angle: " .. currentAngle .. "°"
-    powerLabel.Text = "Power: " .. math.floor(currentPower * 100 + 0.5) .. "%"
 end
 
 -- ======================= FIRE WITH HOMING =======================
@@ -407,7 +368,7 @@ local function fireStrikeAndHoming()
             end
         end
         if targetBodyId and holePos then
-            rigidSim.SetHoming(targetBodyId, holePos, 200)  -- aggressive turn
+            rigidSim.SetHoming(targetBodyId, holePos, 200)
             statusLabel.Text = "Status: Homing active"
         else
             statusLabel.Text = "Status: Homing failed"
@@ -426,10 +387,6 @@ function setEnabled(state)
     toggleBtn.BackgroundColor3 = state and Color3.fromRGB(50, 180, 50) or Color3.fromRGB(200, 50, 50)
     beam.Enabled = state
     if not state then
-        angleLabel.Text = "Angle: --°"
-        powerLabel.Text = "Power: --%"
-        distanceLabel.Text = "Dist: --"
-        obstacleLabel.Text = "Obstacle: --"
         statusLabel.Text = "Status: Idle"
     end
 end
@@ -484,4 +441,4 @@ end)
 RunService.RenderStepped:Connect(computeBestShot)
 
 setEnabled(false)
-print("✅ BABIS DEADLY GOLF AIMBOT – Compact precision + homing ready.")
+print("✅ BABIS DEADLY GOLF AIMBOT – Compact + Homing (info stripped)")
