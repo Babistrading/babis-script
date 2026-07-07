@@ -1,3 +1,5 @@
+--[[ Protected by Lua Guard ]]
+
 -- ============================================
 --  Babis MM2 Beta Key - Combined Script
 --  Kill All (Murderer) + Bullet TP (Sheriff)
@@ -5,210 +7,210 @@
 -- ============================================
 
 --  CONFIGURATION (edit these if needed)
-local DISCORD_INVITE = "https://discord.gg/tRA3yStbvq"   -- Permanent invite (never expires)
-local VALID_KEY = "W7#qL9!xP2@vR8$mN5^z"               -- Key users paste to unlock
+local DISCORD_INVITE = "\104\116\116\112\115\058\047\047\100\105\115\099\111\114\100\046\103\103\047\116\082\065\051\121\083\116\098\118\113"   -- Permanent invite (never expires)
+local VALID_KEY = "\087\055\035\113\076\057\033\120\080\050\064\118\082\056\036\109\078\053\094\122"               -- Key users paste to unlock
 
 --  INTERNAL VARIABLES
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
+local HttpService = game:GetService("\072\116\116\112\083\101\114\118\105\099\101")
+local Players = game:GetService("\080\108\097\121\101\114\115")
 local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+local playerGui = player:WaitForChild("\080\108\097\121\101\114\071\117\105")
 
 --  CHECK IF KEY ALREADY VERIFIED (via saved file)
 local keyAlreadyVerified = false
 pcall(function()
-    local content = readfile("BabisKeyVerified.txt")
-    if content == "true" then
+    local content = readfile("\066\097\098\105\115\075\101\121\086\101\114\105\102\105\101\100\046\116\120\116")
+    if content == "\116\114\117\101" then
         keyAlreadyVerified = true
     end
 end)
 
 -- ===== CREATE MAIN SCREEN GUI =====
-local gui = Instance.new("ScreenGui")
-gui.Name = "BabisBrokenBones"
+local gui = Instance.new("\083\099\114\101\101\110\071\117\105")
+gui.Name = "\066\097\098\105\115\066\114\111\107\101\110\066\111\110\101\115"
 gui.Parent = playerGui
 gui.ResetOnSpawn = false
 
 -- ============================================================
 --  KEY ENTRY FRAME (appears only if NOT yet verified)
 -- ============================================================
-local keyFrame = Instance.new("Frame")
-keyFrame.Size = UDim2.new(0, 300, 0, 200)
-keyFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-keyFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-keyFrame.BorderSizePixel = 0
+local keyFrame = Instance.new("\070\114\097\109\101")
+keyFrame.Size = UDim2.new(0x0, 0x12C, 0x0, 0xC8)
+keyFrame.Position = UDim2.new(0.5, -0x96, 0.5, -0x64)
+keyFrame.BackgroundColor3 = Color3.fromRGB(0x0, 0x0, 0x0)
+keyFrame.BorderSizePixel = 0x0
 keyFrame.Visible = not keyAlreadyVerified
 keyFrame.Parent = gui
 
-local keyCorner = Instance.new("UICorner")
-keyCorner.CornerRadius = UDim.new(0.1, 0)
+local keyCorner = Instance.new("\085\073\067\111\114\110\101\114")
+keyCorner.CornerRadius = UDim.new(0.1, 0x0)
 keyCorner.Parent = keyFrame
 
-local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, -20, 0, 30)
-titleLabel.Position = UDim2.new(0, 10, 0, 10)
-titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "Enter Key to Unlock"
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+local titleLabel = Instance.new("\084\101\120\116\076\097\098\101\108")
+titleLabel.Size = UDim2.new(0x1, -0x14, 0x0, 0x1E)
+titleLabel.Position = UDim2.new(0x0, 0xA, 0x0, 0xA)
+titleLabel.BackgroundTransparency = 0x1
+titleLabel.Text = "\069\110\116\101\114\032\075\101\121\032\116\111\032\085\110\108\111\099\107"
+titleLabel.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 titleLabel.Font = Enum.Font.SourceSansBold
-titleLabel.TextSize = 18
+titleLabel.TextSize = 0x12
 titleLabel.Parent = keyFrame
 
-local keyBox = Instance.new("TextBox")
-keyBox.Size = UDim2.new(1, -40, 0, 35)
-keyBox.Position = UDim2.new(0, 20, 0, 50)
-keyBox.PlaceholderText = "Paste your key here..."
+local keyBox = Instance.new("\084\101\120\116\066\111\120")
+keyBox.Size = UDim2.new(0x1, -0x28, 0x0, 0x23)
+keyBox.Position = UDim2.new(0x0, 0x14, 0x0, 0x32)
+keyBox.PlaceholderText = "\080\097\115\116\101\032\121\111\117\114\032\107\101\121\032\104\101\114\101\046\046\046"
 keyBox.Text = ""
-keyBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.BackgroundColor3 = Color3.fromRGB(0x28, 0x28, 0x28)
+keyBox.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 keyBox.Font = Enum.Font.SourceSans
-keyBox.TextSize = 16
-keyBox.BorderSizePixel = 0
+keyBox.TextSize = 0x10
+keyBox.BorderSizePixel = 0x0
 keyBox.Parent = keyFrame
 
-local keyBoxCorner = Instance.new("UICorner")
-keyBoxCorner.CornerRadius = UDim.new(0.1, 0)
+local keyBoxCorner = Instance.new("\085\073\067\111\114\110\101\114")
+keyBoxCorner.CornerRadius = UDim.new(0.1, 0x0)
 keyBoxCorner.Parent = keyBox
 
-local verifyBtn = Instance.new("TextButton")
-verifyBtn.Size = UDim2.new(1, -40, 0, 35)
-verifyBtn.Position = UDim2.new(0, 20, 0, 95)
-verifyBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-verifyBtn.Text = "Verify Key"
-verifyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local verifyBtn = Instance.new("\084\101\120\116\066\117\116\116\111\110")
+verifyBtn.Size = UDim2.new(0x1, -0x28, 0x0, 0x23)
+verifyBtn.Position = UDim2.new(0x0, 0x14, 0x0, 0x5F)
+verifyBtn.BackgroundColor3 = Color3.fromRGB(0x3C, 0x3C, 0x3C)
+verifyBtn.Text = "\086\101\114\105\102\121\032\075\101\121"
+verifyBtn.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 verifyBtn.Font = Enum.Font.SourceSansBold
-verifyBtn.TextSize = 16
-verifyBtn.BorderSizePixel = 0
+verifyBtn.TextSize = 0x10
+verifyBtn.BorderSizePixel = 0x0
 verifyBtn.AutoButtonColor = false
 verifyBtn.Parent = keyFrame
 
-local verifyCorner = Instance.new("UICorner")
-verifyCorner.CornerRadius = UDim.new(0.1, 0)
+local verifyCorner = Instance.new("\085\073\067\111\114\110\101\114")
+verifyCorner.CornerRadius = UDim.new(0.1, 0x0)
 verifyCorner.Parent = verifyBtn
 
-local getKeyBtn = Instance.new("TextButton")
-getKeyBtn.Size = UDim2.new(1, -40, 0, 35)
-getKeyBtn.Position = UDim2.new(0, 20, 0, 140)
-getKeyBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 212)
-getKeyBtn.Text = "Get Key (Join Discord)"
-getKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local getKeyBtn = Instance.new("\084\101\120\116\066\117\116\116\111\110")
+getKeyBtn.Size = UDim2.new(0x1, -0x28, 0x0, 0x23)
+getKeyBtn.Position = UDim2.new(0x0, 0x14, 0x0, 0x8C)
+getKeyBtn.BackgroundColor3 = Color3.fromRGB(0x0, 0x78, 0xD4)
+getKeyBtn.Text = "\071\101\116\032\075\101\121\032\040\074\111\105\110\032\068\105\115\099\111\114\100\041"
+getKeyBtn.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 getKeyBtn.Font = Enum.Font.SourceSansBold
-getKeyBtn.TextSize = 16
-getKeyBtn.BorderSizePixel = 0
+getKeyBtn.TextSize = 0x10
+getKeyBtn.BorderSizePixel = 0x0
 getKeyBtn.AutoButtonColor = false
 getKeyBtn.Parent = keyFrame
 
-local getKeyCorner = Instance.new("UICorner")
-getKeyCorner.CornerRadius = UDim.new(0.1, 0)
+local getKeyCorner = Instance.new("\085\073\067\111\114\110\101\114")
+getKeyCorner.CornerRadius = UDim.new(0.1, 0x0)
 getKeyCorner.Parent = getKeyBtn
 
-local statusLabel = Instance.new("TextLabel")
-statusLabel.Size = UDim2.new(1, -20, 0, 20)
-statusLabel.Position = UDim2.new(0, 10, 0, 180)
-statusLabel.BackgroundTransparency = 1
+local statusLabel = Instance.new("\084\101\120\116\076\097\098\101\108")
+statusLabel.Size = UDim2.new(0x1, -0x14, 0x0, 0x14)
+statusLabel.Position = UDim2.new(0x0, 0xA, 0x0, 0xB4)
+statusLabel.BackgroundTransparency = 0x1
 statusLabel.Text = ""
-statusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+statusLabel.TextColor3 = Color3.fromRGB(0xFF, 0x50, 0x50)
 statusLabel.Font = Enum.Font.SourceSans
-statusLabel.TextSize = 14
+statusLabel.TextSize = 0xE
 statusLabel.Visible = false
 statusLabel.Parent = keyFrame
 
 -- ============================================================
---  TOGGLE BUTTON (black square with white "B")
+--  TOGGLE BUTTON (black square with white "\066")
 --  Hidden until key is verified (or already verified)
 -- ============================================================
-local toggleBtn = Instance.new("TextButton")
-toggleBtn.Size = UDim2.new(0, 60, 0, 60)
-toggleBtn.Position = UDim2.new(0.8, 0, 0.8, 0)
-toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleBtn.Text = "B"
+local toggleBtn = Instance.new("\084\101\120\116\066\117\116\116\111\110")
+toggleBtn.Size = UDim2.new(0x0, 0x3C, 0x0, 0x3C)
+toggleBtn.Position = UDim2.new(0.8, 0x0, 0.8, 0x0)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(0x0, 0x0, 0x0)
+toggleBtn.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
+toggleBtn.Text = "\066"
 toggleBtn.Font = Enum.Font.SourceSansBold
-toggleBtn.TextSize = 30
-toggleBtn.BorderSizePixel = 0
+toggleBtn.TextSize = 0x1E
+toggleBtn.BorderSizePixel = 0x0
 toggleBtn.AutoButtonColor = false
 toggleBtn.Visible = keyAlreadyVerified
 toggleBtn.Parent = gui
 
-local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0.3, 0)
+local toggleCorner = Instance.new("\085\073\067\111\114\110\101\114")
+toggleCorner.CornerRadius = UDim.new(0.3, 0x0)
 toggleCorner.Parent = toggleBtn
 
 -- ============================================================
 --  MAIN HACK FRAME (Kill All + Bullet TP)
 -- ============================================================
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 220, 0, 200)
-mainFrame.Position = UDim2.new(0.5, -110, 0.5, -100)
-mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-mainFrame.BorderSizePixel = 0
+local mainFrame = Instance.new("\070\114\097\109\101")
+mainFrame.Size = UDim2.new(0x0, 0xDC, 0x0, 0xC8)
+mainFrame.Position = UDim2.new(0.5, -0x6E, 0.5, -0x64)
+mainFrame.BackgroundColor3 = Color3.fromRGB(0x0, 0x0, 0x0)
+mainFrame.BorderSizePixel = 0x0
 mainFrame.Visible = false
 mainFrame.Active = true
 mainFrame.Draggable = true
 mainFrame.Parent = gui
 
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0.1, 0)
+local mainCorner = Instance.new("\085\073\067\111\114\110\101\114")
+mainCorner.CornerRadius = UDim.new(0.1, 0x0)
 mainCorner.Parent = mainFrame
 
-local mainTitle = Instance.new("TextLabel")
-mainTitle.Size = UDim2.new(1, -20, 0, 40)
-mainTitle.Position = UDim2.new(0, 10, 0, 10)
-mainTitle.BackgroundTransparency = 1
-mainTitle.Text = "Babis broken bones beta key"
-mainTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+local mainTitle = Instance.new("\084\101\120\116\076\097\098\101\108")
+mainTitle.Size = UDim2.new(0x1, -0x14, 0x0, 0x28)
+mainTitle.Position = UDim2.new(0x0, 0xA, 0x0, 0xA)
+mainTitle.BackgroundTransparency = 0x1
+mainTitle.Text = "\066\097\098\105\115\032\098\114\111\107\101\110\032\098\111\110\101\115\032\098\101\116\097\032\107\101\121"
+mainTitle.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 mainTitle.Font = Enum.Font.SourceSansBold
-mainTitle.TextSize = 18
+mainTitle.TextSize = 0x12
 mainTitle.Parent = mainFrame
 
-local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -40, 0, 5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-closeBtn.Text = "X"
-closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local closeBtn = Instance.new("\084\101\120\116\066\117\116\116\111\110")
+closeBtn.Size = UDim2.new(0x0, 0x1E, 0x0, 0x1E)
+closeBtn.Position = UDim2.new(0x1, -0x28, 0x0, 0x5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(0x28, 0x28, 0x28)
+closeBtn.Text = "\088"
+closeBtn.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 closeBtn.Font = Enum.Font.SourceSansBold
-closeBtn.TextSize = 18
-closeBtn.BorderSizePixel = 0
+closeBtn.TextSize = 0x12
+closeBtn.BorderSizePixel = 0x0
 closeBtn.AutoButtonColor = false
 closeBtn.Parent = mainFrame
 
-local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0.4, 0)
+local closeCorner = Instance.new("\085\073\067\111\114\110\101\114")
+closeCorner.CornerRadius = UDim.new(0.4, 0x0)
 closeCorner.Parent = closeBtn
 
 -- Kill All button
-local killAllBtn = Instance.new("TextButton")
-killAllBtn.Size = UDim2.new(1, -20, 0, 50)
-killAllBtn.Position = UDim2.new(0, 10, 0, 60)
-killAllBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-killAllBtn.Text = "Kill All (Murderer): OFF"
-killAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local killAllBtn = Instance.new("\084\101\120\116\066\117\116\116\111\110")
+killAllBtn.Size = UDim2.new(0x1, -0x14, 0x0, 0x32)
+killAllBtn.Position = UDim2.new(0x0, 0xA, 0x0, 0x3C)
+killAllBtn.BackgroundColor3 = Color3.fromRGB(0x1E, 0x1E, 0x1E)
+killAllBtn.Text = "\075\105\108\108\032\065\108\108\032\040\077\117\114\100\101\114\101\114\041\058\032\079\070\070"
+killAllBtn.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 killAllBtn.Font = Enum.Font.SourceSans
-killAllBtn.TextSize = 16
-killAllBtn.BorderSizePixel = 0
+killAllBtn.TextSize = 0x10
+killAllBtn.BorderSizePixel = 0x0
 killAllBtn.AutoButtonColor = false
 killAllBtn.Parent = mainFrame
 
-local killAllCorner = Instance.new("UICorner")
-killAllCorner.CornerRadius = UDim.new(0.1, 0)
+local killAllCorner = Instance.new("\085\073\067\111\114\110\101\114")
+killAllCorner.CornerRadius = UDim.new(0.1, 0x0)
 killAllCorner.Parent = killAllBtn
 
 -- Bullet TP button
-local bulletTpBtn = Instance.new("TextButton")
-bulletTpBtn.Size = UDim2.new(1, -20, 0, 50)
-bulletTpBtn.Position = UDim2.new(0, 10, 0, 130)
-bulletTpBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-bulletTpBtn.Text = "Bullet TP (Sheriff): OFF"
-bulletTpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local bulletTpBtn = Instance.new("\084\101\120\116\066\117\116\116\111\110")
+bulletTpBtn.Size = UDim2.new(0x1, -0x14, 0x0, 0x32)
+bulletTpBtn.Position = UDim2.new(0x0, 0xA, 0x0, 0x82)
+bulletTpBtn.BackgroundColor3 = Color3.fromRGB(0x1E, 0x1E, 0x1E)
+bulletTpBtn.Text = "\066\117\108\108\101\116\032\084\080\032\040\083\104\101\114\105\102\102\041\058\032\079\070\070"
+bulletTpBtn.TextColor3 = Color3.fromRGB(0xFF, 0xFF, 0xFF)
 bulletTpBtn.Font = Enum.Font.SourceSans
-bulletTpBtn.TextSize = 16
-bulletTpBtn.BorderSizePixel = 0
+bulletTpBtn.TextSize = 0x10
+bulletTpBtn.BorderSizePixel = 0x0
 bulletTpBtn.AutoButtonColor = false
 bulletTpBtn.Parent = mainFrame
 
-local bulletTpCorner = Instance.new("UICorner")
-bulletTpCorner.CornerRadius = UDim.new(0.1, 0)
+local bulletTpCorner = Instance.new("\085\073\067\111\114\110\101\114")
+bulletTpCorner.CornerRadius = UDim.new(0.1, 0x0)
 bulletTpCorner.Parent = bulletTpBtn
 
 -- ============================================================
@@ -236,15 +238,15 @@ local function killAllLoop()
         pcall(function()
             local char = player.Character
             if char then
-                local knife = char:FindFirstChild("Knife")
+                local knife = char:FindFirstChild("\075\110\105\102\101")
                 if knife then
-                    local events = knife:FindFirstChild("Events")
+                    local events = knife:FindFirstChild("\069\118\101\110\116\115")
                     if events then
-                        local HandleTouched = events:FindFirstChild("HandleTouched")
+                        local HandleTouched = events:FindFirstChild("\072\097\110\100\108\101\084\111\117\099\104\101\100")
                         if HandleTouched then
                             for _, targetPlayer in pairs(Players:GetPlayers()) do
                                 if targetPlayer ~= player and targetPlayer.Character then
-                                    local root = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                                    local root = targetPlayer.Character:FindFirstChild("\072\117\109\097\110\111\105\100\082\111\111\116\080\097\114\116")
                                     if root then
                                         HandleTouched:FireServer(root)
                                         task.wait(0.05)
@@ -256,19 +258,19 @@ local function killAllLoop()
                 end
             end
         end)
-        task.wait(1) -- repeat every second
+        task.wait(0x1) -- repeat every second
     end
 end
 
 killAllBtn.MouseButton1Click:Connect(function()
     killAllOn = not killAllOn
     if killAllOn then
-        killAllBtn.Text = "Kill All (Murderer): ON"
-        killAllBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        killAllBtn.Text = "\075\105\108\108\032\065\108\108\032\040\077\117\114\100\101\114\101\114\041\058\032\079\078"
+        killAllBtn.BackgroundColor3 = Color3.fromRGB(0x0, 0x64, 0x0)
         task.spawn(killAllLoop)
     else
-        killAllBtn.Text = "Kill All (Murderer): OFF"
-        killAllBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        killAllBtn.Text = "\075\105\108\108\032\065\108\108\032\040\077\117\114\100\101\114\101\114\041\058\032\079\070\070"
+        killAllBtn.BackgroundColor3 = Color3.fromRGB(0x1E, 0x1E, 0x1E)
     end
 end)
 
@@ -279,20 +281,20 @@ local bulletTpConnection = nil
 local oldNamecall = nil
 
 local function getMurdererRoot()
-    local storage = game:GetService("ReplicatedStorage")
-    local remotes = storage:FindFirstChild("Remotes")
-    local extras = remotes and remotes:FindFirstChild("Extras")
-    local remote = extras and extras:FindFirstChild("GetPlayerData")
+    local storage = game:GetService("\082\101\112\108\105\099\097\116\101\100\083\116\111\114\097\103\101")
+    local remotes = storage:FindFirstChild("\082\101\109\111\116\101\115")
+    local extras = remotes and remotes:FindFirstChild("\069\120\116\114\097\115")
+    local remote = extras and extras:FindFirstChild("\071\101\116\080\108\097\121\101\114\068\097\116\097")
     if not remote then return nil end
 
     local success, data = pcall(remote.InvokeServer, remote)
-    if not success or type(data) ~= "table" then return nil end
+    if not success or type(data) ~= "\116\097\098\108\101" then return nil end
 
     for plrName, plrData in pairs(data) do
-        if plrData.Role == "Murderer" then
+        if plrData.Role == "\077\117\114\100\101\114\101\114" then
             local target = Players:FindFirstChild(plrName)
             if target and target.Character then
-                local hrp = target.Character:FindFirstChild("HumanoidRootPart")
+                local hrp = target.Character:FindFirstChild("\072\117\109\097\110\111\105\100\082\111\111\116\080\097\114\116")
                 if hrp then
                     return hrp
                 end
@@ -303,13 +305,13 @@ local function getMurdererRoot()
 end
 
 local function getShootRemote()
-    local gun = player.Backpack and player.Backpack:FindFirstChild("Gun")
+    local gun = player.Backpack and player.Backpack:FindFirstChild("\071\117\110")
     if not gun then
         if player.Character then
-            gun = player.Character:FindFirstChild("Gun")
+            gun = player.Character:FindFirstChild("\071\117\110")
         end
     end
-    return gun and gun:FindFirstChild("Shoot", true)
+    return gun and gun:FindFirstChild("\083\104\111\111\116", true)
 end
 
 local function enableBulletTP()
@@ -318,18 +320,18 @@ local function enableBulletTP()
     local remoteRef = nil
     local targetRoot = nil
 
-    bulletTpConnection = game:GetService("RunService").RenderStepped:Connect(function()
+    bulletTpConnection = game:GetService("\082\117\110\083\101\114\118\105\099\101").RenderStepped:Connect(function()
         remoteRef = getShootRemote()
         targetRoot = getMurdererRoot()
     end)
 
-    oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+    oldNamecall = hookmetamethod(game, "\095\095\110\097\109\101\099\097\108\108", function(self, ...)
         local args = {...}
         local method = getnamecallmethod()
 
-        if bulletTpOn and remoteRef and self == remoteRef and method == "FireServer" and targetRoot then
-            args[1] = targetRoot.CFrame + Vector3.new(0, 3, 0)
-            args[2] = targetRoot.CFrame
+        if bulletTpOn and remoteRef and self == remoteRef and method == "\070\105\114\101\083\101\114\118\101\114" and targetRoot then
+            args[0x1] = targetRoot.CFrame + Vector3.new(0x0, 0x3, 0x0)
+            args[0x2] = targetRoot.CFrame
             return oldNamecall(self, unpack(args))
         end
 
@@ -343,7 +345,7 @@ local function disableBulletTP()
         bulletTpConnection = nil
     end
     if oldNamecall then
-        hookmetamethod(game, "__namecall", oldNamecall) -- restore original
+        hookmetamethod(game, "\095\095\110\097\109\101\099\097\108\108", oldNamecall) -- restore original
         oldNamecall = nil
     end
 end
@@ -351,12 +353,12 @@ end
 bulletTpBtn.MouseButton1Click:Connect(function()
     bulletTpOn = not bulletTpOn
     if bulletTpOn then
-        bulletTpBtn.Text = "Bullet TP (Sheriff): ON"
-        bulletTpBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        bulletTpBtn.Text = "\066\117\108\108\101\116\032\084\080\032\040\083\104\101\114\105\102\102\041\058\032\079\078"
+        bulletTpBtn.BackgroundColor3 = Color3.fromRGB(0x0, 0x64, 0x0)
         enableBulletTP()
     else
-        bulletTpBtn.Text = "Bullet TP (Sheriff): OFF"
-        bulletTpBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        bulletTpBtn.Text = "\066\117\108\108\101\116\032\084\080\032\040\083\104\101\114\105\102\102\041\058\032\079\070\070"
+        bulletTpBtn.BackgroundColor3 = Color3.fromRGB(0x1E, 0x1E, 0x1E)
         disableBulletTP()
     end
 end)
@@ -367,15 +369,15 @@ end)
 verifyBtn.MouseButton1Click:Connect(function()
     if keyBox.Text == VALID_KEY then
         pcall(function()
-            writefile("BabisKeyVerified.txt", "true")
+            writefile("\066\097\098\105\115\075\101\121\086\101\114\105\102\105\101\100\046\116\120\116", "\116\114\117\101")
         end)
         keyFrame.Visible = false
         toggleBtn.Visible = true
         mainFrame.Visible = true
         statusLabel.Visible = false
-        print("[Babis] Key verified and saved. GUI unlocked permanently.")
+        print("\091\066\097\098\105\115\093\032\075\101\121\032\118\101\114\105\102\105\101\100\032\097\110\100\032\115\097\118\101\100\046\032\071\085\073\032\117\110\108\111\099\107\101\100\032\112\101\114\109\097\110\101\110\116\108\121\046")
     else
-        statusLabel.Text = "Invalid key! Click 'Get Key' to join Discord."
+        statusLabel.Text = "\073\110\118\097\108\105\100\032\107\101\121\033\032\067\108\105\099\107\032\039\071\101\116\032\075\101\121\039\032\116\111\032\106\111\105\110\032\068\105\115\099\111\114\100\046"
         statusLabel.Visible = true
     end
 end)
@@ -384,12 +386,12 @@ getKeyBtn.MouseButton1Click:Connect(function()
     pcall(function()
         setclipboard(DISCORD_INVITE)
     end)
-    statusLabel.Text = "Link copied"
-    statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+    statusLabel.Text = "\076\105\110\107\032\099\111\112\105\101\100"
+    statusLabel.TextColor3 = Color3.fromRGB(0x0, 0xFF, 0x0)
     statusLabel.Visible = true
-    task.wait(2)
+    task.wait(0x2)
     statusLabel.Visible = false
 end)
 
 -- ============================================================
-print("[Babis] Combined MM2 script loaded. Key system active.")
+print("\091\066\097\098\105\115\093\032\067\111\109\098\105\110\101\100\032\077\077\050\032\115\099\114\105\112\116\032\108\111\097\100\101\100\046\032\075\101\121\032\115\121\115\116\101\109\032\097\099\116\105\118\101\046")
