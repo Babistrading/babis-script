@@ -3070,8 +3070,8 @@ local library = {}
 _G.Color = Color3.fromRGB(154, 240, 17) 
 _G.imageLogo = "rbxassetid://12940626152"
 _G.Logo = "rbxassetid://12940626152"
-_G.NameHub = "Made By Dragon Toro" -- ชื่อ Hub
-_G.Title = "Matsune Hub Script blox fruits" -- คำอธิบาย
+_G.NameHub = "Made By Babis team" 
+_G.Title = "Babis Hub Script blox fruits" 
 -----------------------------------------------------------------
 
 local isUIEnabled = true 
@@ -3368,7 +3368,7 @@ end)
 
 -- Click event: copy Discord link
 Discord.MouseButton1Click:Connect(function()
-    (setclipboard or toclipboard)("https://discord.gg/SpJQ3XVEJ8")
+    (setclipboard or toclipboard)("https://discord.gg/tRA3yStbvq")
     wait(.1)
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Discord",
