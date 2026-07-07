@@ -4,7 +4,7 @@
     ║  Detects ball (RigidSync+UserId) & hole (EndPoint)       ║
     ║  Advanced loft scanning (0‑85°) for minimal power        ║
     ║  Laser beam, compact auto‑scaling GUI, hold‑to‑fire      ║
-    ║  (Obstacle / Power / Angle / Distance lines removed)     ║
+    ║  Minimize button added – only Status shown in GUI        ║
     ╚══════════════════════════════════════════════════════════════╝
 ]]
 
@@ -50,11 +50,13 @@ screenGui.Name = "BabisDeadlyGolf"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
--- Main panel (compact, fixed pixel size, positioned proportionally)
+-- Main panel
 local panel = Instance.new("Frame")
 panel.Name = "MainPanel"
-panel.Size = UDim2.new(0, 175, 0, 175)       -- reduced height after removing info lines
-panel.Position = UDim2.new(1, -185, 0.5, -87) -- vertically centered
+local fullSize = UDim2.new(0, 175, 0, 175)      -- height reduced after removing info lines
+local minSize = UDim2.new(0, 175, 0, 24)        -- title bar only
+panel.Size = fullSize
+panel.Position = UDim2.new(1, -185, 0.5, -87)
 panel.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
 panel.BackgroundTransparency = 0.1
 panel.BorderSizePixel = 0
@@ -74,7 +76,7 @@ titleBarCover.BorderSizePixel = 0
 titleBarCover.Position = UDim2.new(0, 0, 0, 12)
 
 local titleText = Instance.new("TextLabel", titleBar)
-titleText.Size = UDim2.new(1, -10, 1, 0)
+titleText.Size = UDim2.new(1, -30, 1, 0)   -- leave space for minimize button
 titleText.Position = UDim2.new(0, 5, 0, 0)
 titleText.BackgroundTransparency = 1
 titleText.TextColor3 = Color3.new(1, 1, 1)
@@ -82,6 +84,18 @@ titleText.Font = Enum.Font.GothamBold
 titleText.TextSize = 13
 titleText.Text = "BABIS DEADLY GOLF"
 titleText.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Minimize button
+local minimizeBtn = Instance.new("TextButton", titleBar)
+minimizeBtn.Size = UDim2.new(0, 20, 0, 20)
+minimizeBtn.Position = UDim2.new(1, -25, 0.5, -10)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 120, 0)
+minimizeBtn.Text = "🗕"
+minimizeBtn.TextColor3 = Color3.new(1, 1, 1)
+minimizeBtn.Font = Enum.Font.Gotham
+minimizeBtn.TextSize = 14
+minimizeBtn.BorderSizePixel = 0
+Instance.new("UICorner", minimizeBtn).CornerRadius = UDim.new(0, 4)
 
 -- Toggle button
 local toggleBtn = Instance.new("TextButton", panel)
@@ -94,9 +108,10 @@ toggleBtn.TextColor3 = Color3.new(1, 1, 1)
 toggleBtn.Font = Enum.Font.GothamBold
 toggleBtn.TextSize = 12
 toggleBtn.AutoButtonColor = false
+toggleBtn.Name = "ToggleBtn"
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 6)
 
--- Only one info line: status
+-- Status label (only info shown)
 local statusLabel = Instance.new("TextLabel", panel)
 statusLabel.Size = UDim2.new(1, -16, 0, 14)
 statusLabel.Position = UDim2.new(0.5, 0, 0, 64)
@@ -107,8 +122,9 @@ statusLabel.Font = Enum.Font.Gotham
 statusLabel.TextSize = 11
 statusLabel.Text = "Status: Idle"
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.Name = "StatusLabel"
 
--- Power slider (0‑115%) – shifted up
+-- Power slider
 local sliderLabel = Instance.new("TextLabel", panel)
 sliderLabel.Size = UDim2.new(1, -16, 0, 14)
 sliderLabel.Position = UDim2.new(0.5, 0, 0, 84)
@@ -118,6 +134,7 @@ sliderLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
 sliderLabel.Font = Enum.Font.Gotham
 sliderLabel.TextSize = 11
 sliderLabel.Text = "Max Power: 100%"
+sliderLabel.Name = "SliderLabel"
 
 local sliderBg = Instance.new("Frame", panel)
 sliderBg.Size = UDim2.new(1, -16, 0, 10)
@@ -125,12 +142,14 @@ sliderBg.Position = UDim2.new(0.5, 0, 0, 100)
 sliderBg.AnchorPoint = Vector2.new(0.5, 0)
 sliderBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 sliderBg.BorderSizePixel = 0
+sliderBg.Name = "SliderBg"
 Instance.new("UICorner", sliderBg).CornerRadius = UDim.new(0, 5)
 
 local sliderFill = Instance.new("Frame", sliderBg)
 sliderFill.Size = UDim2.new(1, 0, 1, 0)
 sliderFill.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
 sliderFill.BorderSizePixel = 0
+sliderFill.Name = "SliderFill"
 Instance.new("UICorner", sliderFill).CornerRadius = UDim.new(0, 5)
 
 local sliderBtn = Instance.new("TextButton", sliderBg)
@@ -139,40 +158,10 @@ sliderBtn.Position = UDim2.new(1, -7, 0.5, -7)
 sliderBtn.BackgroundColor3 = Color3.new(1, 1, 1)
 sliderBtn.Text = ""
 sliderBtn.BorderSizePixel = 0
+sliderBtn.Name = "SliderBtn"
 Instance.new("UICorner", sliderBtn).CornerRadius = UDim.new(0, 7)
 
-local maxPower = 1.0  -- 0 .. 1.15
-local function updateSlider()
-    local ratio = math.clamp(maxPower / 1.15, 0, 1)
-    sliderFill.Size = UDim2.new(ratio, 0, 1, 0)
-    sliderBtn.Position = UDim2.new(ratio, -7, 0.5, -7)
-    sliderLabel.Text = "Max Power: " .. math.floor(maxPower * 100 + 0.5) .. "%"
-end
-updateSlider()
-
--- Slider drag
-local sliderDragging = false
-sliderBtn.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        sliderDragging = true
-    end
-end)
-UserInputService.InputChanged:Connect(function(input)
-    if sliderDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
-        local absPos = sliderBg.AbsolutePosition
-        local absSize = sliderBg.AbsoluteSize
-        local rawRatio = math.clamp((input.Position.X - absPos.X) / absSize.X, 0, 1)
-        maxPower = rawRatio * 1.15
-        updateSlider()
-    end
-end)
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        sliderDragging = false
-    end
-end)
-
--- Fire button with integrated progress
+-- Fire button
 local strikeBtn = Instance.new("TextButton", panel)
 strikeBtn.Size = UDim2.new(1, -16, 0, 32)
 strikeBtn.Position = UDim2.new(0.5, 0, 1, -42)
@@ -182,6 +171,7 @@ strikeBtn.Text = "🔥 HOLD TO LAUNCH"
 strikeBtn.TextColor3 = Color3.new(1, 1, 1)
 strikeBtn.Font = Enum.Font.GothamBold
 strikeBtn.TextSize = 12
+strikeBtn.Name = "StrikeBtn"
 Instance.new("UICorner", strikeBtn).CornerRadius = UDim.new(0, 6)
 
 -- Progress bar inside the button
@@ -195,7 +185,31 @@ progressFill.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
 progressFill.BorderSizePixel = 0
 progressFill.BackgroundTransparency = 0.3
 
--- Dragging the panel via title bar
+-- Content items to hide/show on minimize
+local contentItems = {
+    toggleBtn, statusLabel, sliderLabel, sliderBg, strikeBtn
+}
+
+-- Minimize logic
+local isMinimized = false
+minimizeBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    if isMinimized then
+        panel.Size = minSize
+        for _, item in ipairs(contentItems) do
+            item.Visible = false
+        end
+        minimizeBtn.Text = "🗖"  -- restore icon
+    else
+        panel.Size = fullSize
+        for _, item in ipairs(contentItems) do
+            item.Visible = true
+        end
+        minimizeBtn.Text = "🗕"
+    end
+end)
+
+-- Dragging
 local drag = false
 local dragStartInput, dragStartPos
 titleBar.InputBegan:Connect(function(input)
@@ -258,6 +272,15 @@ local aimbotEnabled = false
 local currentAngle = 0
 local currentPower = 0
 local bestFlatDir = Vector3.new(0, 0, -1)
+local maxPower = 1.0  -- 0 .. 1.15
+
+function updateSlider()
+    local ratio = math.clamp(maxPower / 1.15, 0, 1)
+    sliderFill.Size = UDim2.new(ratio, 0, 1, 0)
+    sliderBtn.Position = UDim2.new(ratio, -7, 0.5, -7)
+    sliderLabel.Text = "Max Power: " .. math.floor(maxPower * 100 + 0.5) .. "%"
+end
+updateSlider()
 
 function computeBestShot()
     local ballPart = getYourBallPart()
@@ -270,7 +293,7 @@ function computeBestShot()
         return
     end
 
-    -- Laser beam
+    -- Laser beam always active when enabled
     attach0.WorldPosition = ballPart.Position
     attach1.WorldPosition = holePos
     beam.Enabled = aimbotEnabled
@@ -357,7 +380,6 @@ local function fireStrikeAndHoming()
     strikeBtn.Text = "🎯 HOMING ACTIVE"
     statusLabel.Text = "Status: Homing..."
 
-    -- Activate homing after physics kick‑in
     task.delay(0.08, function()
         if not rigidSim then return end
         local targetBodyId = nil
@@ -393,6 +415,28 @@ end
 
 toggleBtn.MouseButton1Click:Connect(function()
     setEnabled(not aimbotEnabled)
+end)
+
+-- Slider drag
+local sliderDragging = false
+sliderBtn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        sliderDragging = true
+    end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if sliderDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        local absPos = sliderBg.AbsolutePosition
+        local absSize = sliderBg.AbsoluteSize
+        local rawRatio = math.clamp((input.Position.X - absPos.X) / absSize.X, 0, 1)
+        maxPower = rawRatio * 1.15
+        updateSlider()
+    end
+end)
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        sliderDragging = false
+    end
 end)
 
 -- Hold‑to‑fire with progress
@@ -441,4 +485,4 @@ end)
 RunService.RenderStepped:Connect(computeBestShot)
 
 setEnabled(false)
-print("✅ BABIS DEADLY GOLF AIMBOT – Compact + Homing (info stripped)")
+print("✅ BABIS DEADLY GOLF AIMBOT – Final English version: Minimize + Status only.")
