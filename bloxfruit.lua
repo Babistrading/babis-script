@@ -3093,30 +3093,32 @@ end
 
 -- Creating the ScreenGui and ImageButton
 local ScreenGui = Instance.new("ScreenGui")
-local TextButton = Instance.new("TextButton")   -- CHANGE THIS (was ImageButton)
+local ImageButton = Instance.new("ImageButton")  -- On utilise ImageButton (pas de texte)
 local UICorner = Instance.new("UICorner")
 
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-TextButton.Parent = ScreenGui
-TextButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)    -- Black square
-TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextButton.BorderSizePixel = 0
-TextButton.Position = UDim2.new(0.120833337 - 0.10, 0, 0.0952890813 + 0.01, 0)
-TextButton.Size = UDim2.new(0, 40, 0, 40)
-TextButton.Draggable = true
-TextButton.Text = "B"                                     -- White B
-TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextButton.TextSize = 24
-TextButton.TextScaled = false
-TextButton.Font = Enum.Font.GothamBold
+ImageButton.Parent = ScreenGui
+ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- Fond noir (si ton image a du vide)
+ImageButton.BackgroundTransparency = 0                  -- 0 = opaque, 1 = transparent
+ImageButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton.BorderSizePixel = 0
+ImageButton.Position = UDim2.new(0.120833337 - 0.10, 0, 0.0952890813 + 0.01, 0)
+ImageButton.Size = UDim2.new(0, 40, 0, 40)
+ImageButton.Draggable = true
 
--- ROUNDED CORNERS (adjust the number to change the roundness)
-UICorner.CornerRadius = UDim.new(0, 8)   -- 8px radius for a nice rounded square
-UICorner.Parent = TextButton
+-- Ton logo
+ImageButton.Image = "rbxassetid://105214607548233"
+ImageButton.ImageColor3 = Color3.fromRGB(255, 255, 255) -- Si ton logo doit être teinté (blanc)
+ImageButton.ScaleType = Enum.ScaleType.Fit              -- L'image s'adapte à la taille du bouton
 
-TextButton.MouseButton1Click:Connect(function()
+-- Coins arrondis (8px, tu peux ajuster)
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = ImageButton
+
+-- Fonction pour ouvrir/fermer le menu (inchangée)
+ImageButton.MouseButton1Click:Connect(function()
     isUIEnabled = not isUIEnabled
     toggleUI()
 end)
