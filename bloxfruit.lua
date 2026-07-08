@@ -3093,30 +3093,29 @@ end
 
 -- Creating the ScreenGui and ImageButton
 local ScreenGui = Instance.new("ScreenGui")
-local ImageButton = Instance.new("ImageButton")
+local TextButton = Instance.new("TextButton")   -- changed from ImageButton
 local UICorner = Instance.new("UICorner")
 
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-ImageButton.Parent = ScreenGui
-ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)      -- noir
-ImageButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-ImageButton.BorderSizePixel = 0
-ImageButton.Position = UDim2.new(0.120833337 - 0.10, 0, 0.0952890813 + 0.01, 0)
-ImageButton.Size = UDim2.new(0, 40, 0, 40)
-ImageButton.Draggable = true
-ImageButton.Image = ""                                     -- pas d'image
-ImageButton.Text = "B"                                     -- lettre
-ImageButton.TextColor3 = Color3.fromRGB(255, 255, 255)     -- blanc
-ImageButton.TextSize = 24                                  -- taille de la lettre
-ImageButton.TextScaled = false
-ImageButton.Font = Enum.Font.GothamBold
+TextButton.Parent = ScreenGui
+TextButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)   -- black square
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.120833337 - 0.10, 0, 0.0952890813 + 0.01, 0)
+TextButton.Size = UDim2.new(0, 40, 0, 40)
+TextButton.Draggable = true
+TextButton.Text = "B"                                    -- the letter
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)    -- white
+TextButton.TextSize = 24
+TextButton.TextScaled = false
+TextButton.Font = Enum.Font.GothamBold
 
-UICorner.CornerRadius = UDim.new(0, 0)   -- carré (pas d'arrondi)
-UICorner.Parent = ImageButton
+UICorner.CornerRadius = UDim.new(0, 0)   -- perfect square (no rounding)
+UICorner.Parent = TextButton
 
-ImageButton.MouseButton1Click:Connect(function()
+TextButton.MouseButton1Click:Connect(function()
     isUIEnabled = not isUIEnabled
     toggleUI()
 end)
