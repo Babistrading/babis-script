@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://babis-keymaster.lovable.app/api/public/loader/4fb5e78aeb0697bc38ebce0a", true))()
+loadstring(game:HttpGet("https://babis-keymaster.lovable.app/api/public/loader/a8910271dcb9c41c0355cd95", true))()
